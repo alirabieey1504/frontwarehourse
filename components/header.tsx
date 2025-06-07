@@ -1,12 +1,16 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
+import useThemeStore from "../lib/themstore";
 export default function Header() {
-  const [stateShow, setStateShow] = useState(true);
+  const setthem = useThemeStore((state) => state.setThem);
+  const them = useThemeStore((state) => state.theme);
+
   const ChangeFunction = useCallback(() => {
-    setStateShow((prev) => !prev);
-    console.log(stateShow, "this is state");
-    console.log("this is log");
-  }, [stateShow]);
+    setthem("light");
+    if (them == "light") {
+      setthem("dark");
+    } else setthem("light");
+  }, [them]);
   return (
     <div className="flex gap-5 items-center mt-4 ml-4">
       <div>this is my header</div>
@@ -14,7 +18,7 @@ export default function Header() {
         onClick={ChangeFunction}
         className="border-2 border-gray-500 rounded  p-1"
       >
-        {stateShow ? (
+        {them == "light" ? (
           <svg
             fill="#ffffff"
             className="w-5 h-5  "
