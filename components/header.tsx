@@ -1,15 +1,22 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import useThemeStore from "../lib/themstore";
 export default function Header() {
-  const setthem = useThemeStore((state) => state.setThem);
   const them = useThemeStore((state) => state.theme);
-
+  const [theme, setTheme] = useState<string | null>("dark");
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      var raw: string | null = localStorage?.getItem("theme-storage");
+      console.log(raw, "this is loc");
+      const parsed = raw ? JSON.parse(raw) : null;
+      const theme = parsed.state.theme;
+      setTheme(theme);
+      console.log(theme, "this is them");
+    }
+  }, []);
   const ChangeFunction = useCallback(() => {
-    setthem("light");
-    if (them == "light") {
-      setthem("dark");
-    } else setthem("light");
+    toggleTheme();
   }, [them]);
   return (
     <div className="flex gap-5 items-center mt-4 ml-4">
@@ -18,7 +25,7 @@ export default function Header() {
         onClick={ChangeFunction}
         className="border-2 border-gray-500 rounded  p-1"
       >
-        {them == "light" ? (
+        {them == "dark" ? (
           <svg
             fill="#ffffff"
             className="w-5 h-5  "
